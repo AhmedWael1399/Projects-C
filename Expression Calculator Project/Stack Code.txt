@@ -1,0 +1,70 @@
+#include <string.h>
+#define MAXSIZE 100
+
+typedef struct
+{
+    int items[MAXSIZE];
+    int top;
+} Stack;
+
+Stack* initialize ()
+{
+    Stack *s = malloc(sizeof(Stack));
+    s->top = 0;
+    return s;
+}
+
+void push (Stack *s, int value)
+{
+    s->items[s->top] = value;
+    s->top++;
+}
+
+int pop (Stack *s)
+{
+    int value;
+    s->top--;
+    value = s->items[s->top];
+    return value;
+}
+
+int isEmpty (Stack *s)
+{
+    if (s->top == 0)
+    {
+        return 1;
+    }
+    else
+        return 0;
+}
+
+int top (Stack *s)
+{
+    return s->items[s->top-1];
+}
+
+int isFull (Stack *s)
+{
+    if (s->top == MAXSIZE)
+    {
+        return 1;
+    }
+    else
+        return 0;
+}
+
+void StackDisplay (Stack *s)
+{
+    Stack *copy = initialize();
+    int x;
+    while (! isEmpty(s))
+    {
+        x = pop(s);
+        printf ("* %d\n",x);
+        push (copy,x);
+    }
+    while (! isEmpty(copy))
+    {
+        push(s,pop(copy));
+    }
+}

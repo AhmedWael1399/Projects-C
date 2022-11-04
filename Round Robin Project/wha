@@ -1,0 +1,194 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct
+{
+    char *name;
+    int starting_time;
+    int remaining_time;
+} Process;
+
+typedef struct Node
+{
+    Process data;
+    struct Node* next;
+} Node;
+
+Node* newNode (Process data)
+{
+    Node *n = (Node*)malloc(sizeof(Node));
+    n -> data = data;
+    n -> next = NULL;
+    return n;
+}
+
+typedef struct
+{
+    Node *head;
+    Node *tail;
+} Queue;
+
+Queue* init()
+{
+    Queue *q = (Queue*)malloc(sizeof(Queue));
+    q -> head = NULL;
+    q -> tail = NULL;
+    return q;
+}
+
+int isEmpty(Queue *q)
+{
+    if (q -> head == NULL)
+        return 1;
+    else
+        return 0;
+}
+
+Process dequeue(Queue *q)
+{
+    Process val;
+    if (q -> head)
+    {
+        Node *copy = q -> head;
+        val = copy -> data;
+        q -> head = q -> head -> next;
+        free(copy);
+        if (q -> head == NULL)
+            q -> tail = NULL;
+    }
+    return val;
+}
+
+void enqueue(Queue *q, Process val)
+{
+    Node *n = newNode(val);
+    if (q -> head == NULL)
+        q -> head = q -> tail = n;
+    else
+    {
+        q -> tail -> next = n;
+        q -> tail = n;
+    }
+}
+
+void displayQueue (Queue *q)
+{
+    Node *copy = q -> head;
+    while (copy!= NULL)
+    {
+        printf ("Process name : %s\n",copy -> data.name);
+        printf ("Starting time : %d\n",copy -> data.starting_time);
+        printf ("Remaining time : %d\n\n",copy -> data.remaining_time);
+        copy = copy -> next;
+    }
+}
+
+void destroy(Queue *q)
+{
+
+}
+
+void RoundRobin(char* filename)
+{
+    int i = 0;
+    int totalTime;
+
+    Queue *q1= init();
+    Queue *q2= init();
+    FILE *fp;
+    fp = fopen(filename,"r");
+
+    Process p;
+
+    char w[10],t[5],s[6],eqt;
+    fscanf(fp,"%s %s %s %c %d\n",w,t,s,&eqt,&totalTime);
+
+    while(1)
+    {
+        p.name = malloc(4);
+        fscanf(fp,"%[^ ] %d %d\n",p.name,&p.starting_time,&p.remaining_time);
+        enqueue(q1,p);
+        i++;
+        if (feof(fp))
+            break;
+    }
+
+
+
+    for (i=0; i<totalTime; i++)
+    {
+        int counter=0;
+        int j;
+        Node *n= q1 -> head;
+        Process pq1;
+        Process pq2;
+        while (n!=NULL)
+        {
+            n= n ->next;
+            counter++;
+        }
+
+        for (j=0; j<=counter; j++)
+        {
+            pq1=dequeue(q1);
+            for (i=0; i<=totalTime; i++)
+            {
+                if (pq1.starting_time<=i)
+                {
+                    enqueue(q2,dequeue(q1));
+                }
+                else
+                    enqueue(q1,pq1);
+                }
+        }
+
+        if (!isEmpty(q2))
+        {
+            pq2=dequeue(q2);
+            pq2.remaining_time--;
+            printf("%s     (%d-->%d)",pq2.name,i,i+1);
+            if (pq2.remaining_time==0)
+                printf(" %s aborts",pq2.name);
+            else
+            {
+                enqueue(q2,pq2);
+                printf("\n");
+            }
+        }
+
+        else
+            printf("idle   (%d-->%d)\n",i,i+1);
+
+
+    }
+
+    printf("Stop");
+
+}
+
+
+
+int main()
+{
+    system("color f0");
+    char filename[261];
+    puts("Enter file name or Ctrl+Z to exit:");
+    puts("----------------------------------");
+    while(fgets(filename, 260, stdin) != NULL)
+    {
+        printf ("\n");
+        filename[strlen(filename)-1]='\0';
+        if(fopen(filename,"r"))
+            RoundRobin(filename);
+        else
+        {
+            puts("File Not Found!");
+            puts("----------------------------------\n");
+        }
+        puts("Enter file name or Ctrl+Z to exit:");
+        puts("----------------------------------");
+    }
+
+    return 0;
+}

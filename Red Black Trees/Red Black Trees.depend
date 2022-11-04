@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1623509933 source:c:\users\ahmed\desktop\red black trees\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1623684495 source:c:\users\ahmed\desktop\fac of eng term 6\data structures 2\labs\lab assignments\assignment 2 (red black trees)\red black trees\red black trees.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

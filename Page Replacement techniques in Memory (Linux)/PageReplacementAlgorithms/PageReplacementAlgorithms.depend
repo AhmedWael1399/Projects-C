@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1641939553 source:c:\users\blu-ray\desktop\pagereplacementalgorithms\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

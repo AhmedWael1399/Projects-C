@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <pthread.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/resource.h>
+#include<unistd.h>
+
+void *computeElement(){
+
+
+
+}
+
+
+void *computeRow(){
+
+
+}
+
+int main (){
+ 
+  int rowMatrix1;
+    int columnMatrix1;
+    int rowMatrix2;
+    int columnMatrix2;	
+    int i = 0;
+    int j = 0; 
+    
+    /* Accessing the Input File Matrix */
+    
+    FILE *f;
+    f = fopen ("input-matrix.txt", "r");
+    
+    if (f == NULL)
+        return 0;
+
+    /* Reading the first input matrix */
+    	
+    fscanf(f,"%d %d",&rowMatrix1, &columnMatrix1);
+    int inputMatrix1 [rowMatrix1][columnMatrix1];
+   
+    for(i = 0; i < rowMatrix1; i++)
+    {
+        for(j = 0; j < columnMatrix1; j++)
+            fscanf(f, "%d", &inputMatrix1[i][j]);
+    }
+    
+    /* Reading the second input matrix */
+
+    fscanf(f,"%d %d",&rowMatrix2, &columnMatrix2);
+    int inputMatrix2 [rowMatrix2][columnMatrix2];
+    
+    for(i = 0; i < rowMatrix2; i++)
+    {
+        for(j = 0; j < columnMatrix2; j++)
+            fscanf(f, "%d", &inputMatrix2[i][j]);
+    }
+
+/*Accessing the Output File Matrix after Multiplication */
+    
+     FILE *fout;
+     fout = fopen("output-matrix.txt","w");
+    
+     if (fout == NULL)
+        return 0;
+     int rowMatrix3 = rowMatrix1;
+     int columnMatrix3 = columnMatrix2;
+     int outputMatrix [rowMatrix3][columnMatrix3];
+     int k = 0;
+
+ /* Multiplication of the two input Matrices */
+     
+     for(int i =0; i < rowMatrix1; i++)
+     {  
+       for(int j = 0; j < columnMatrix2; j++)
+       {
+        outputMatrix[i][j] = 0;
+        for(k = 0; k < rowMatrix2; k++)
+        {
+        outputMatrix[i][j] += inputMatrix1[i][k] * inputMatrix2[k][j];
+        }
+     fprintf(fout,"% d ", outputMatrix[i][j]);
+       }
+     }
+   
+    /* Declaration of Element Computation Threads */
+    int pth1 = rowMatrix3 * columnMatrix3;
+    pthread_t threadsElement[pth1];
+ 
+    /* Creation of threads, each evaluating each element computation */
+    for (int i = 0; i < pth1; i++) {
+        
+        pthread_create(&threadsElement[i], NULL, computeElement, NULL);
+    }
+ 
+    /* Joining and Waiting for element computation threads to complete */
+    for (int i = 0; i < pth1; i++)
+        pthread_join(threadsElement[i], NULL);   
+        
+        
+        
+        
+    /* Declaration of Row Computation Threads */
+     int pth2 = rowMatrix3;
+     pthread_t threadsRow[pth2];
+ 
+    /* Creation of threads, each evaluating each row computation */
+     for (int i = 0; i < pth2; i++) {
+        
+        pthread_create(&threadsRow[i], NULL, computeRow, NULL);
+    }
+ 
+    /* Joining and Waiting for row computation threads to complete */
+     for (int i = 0; i < pth2; i++)
+        pthread_join(threadsRow[i], NULL);       
+    
+fclose(fout);
+fclose(f);    
+ 
+return 0;
+}

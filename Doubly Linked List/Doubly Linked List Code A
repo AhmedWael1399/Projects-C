@@ -1,0 +1,105 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct
+{
+    int data;
+    struct Node *prev;
+    struct Node *next;
+} Node;
+
+typedef struct
+{
+    Node*head;
+    Node*tail;
+} DoublyLinkedList;
+
+DoublyLinkedList*init()
+{
+    DoublyLinkedList *l=malloc(sizeof(DoublyLinkedList));
+    l->head=NULL;
+    l->tail=NULL;
+    return l;
+}
+
+Node *newNode(int x)
+{
+    Node *n=malloc(sizeof(Node));
+    n->data=x;
+    n->next=NULL;
+    n->prev=NULL;
+    return n;
+}
+
+DoublyLinkedList* convertArrayToDoublyLinkedList(int array[], int size)
+{
+    DoublyLinkedList *list = init();
+    Node *n =malloc(sizeof(Node));
+    n=newNode(array[size-1]);
+    int i;
+    n->data=array[0];
+    n->next=NULL;
+
+    if (list->head==NULL)
+        list->head=list->tail=n;
+
+    for (i=1; i<size; i++)
+    {
+        n->data=array[i];
+        list->head=n;
+
+    }
+    return list;
+}
+
+DoublyLinkedList *copy (DoublyLinkedList *list)
+{
+    DoublyLinkedList *newList=init();
+    newList->head=NULL;
+    newList->tail=NULL;
+    while (newList->head!=NULL)
+    {
+    newList->head->data=list->head->data;
+    newList->head->next=list->head->next;
+    }
+    return newList;
+}
+
+void concatenate(DoublyLinkedList*  list1, DoublyLinkedList*  list2)
+{
+
+}
+
+
+void Destroy (DoublyLinkedList *list)
+{
+    while (list->head!=NULL)
+    {
+        Node *t=list->head;
+        list->head=list->head->next;
+        free(t);
+    }
+    list->tail=NULL;
+}
+
+void Display (DoublyLinkedList *list)
+{
+    Node *t=list->head;
+    while (t!=NULL)
+    {
+        printf("%d",t->data);
+        t=t->next;
+    }
+
+}
+
+int main()
+{
+    DoublyLinkedList *list;
+    Node *n=malloc(sizeof(Node));
+    int array[]= {1,2,3};
+    convertArrayToDoublyLinkedList(array,3);
+    Display(list);
+    return 0;
+}

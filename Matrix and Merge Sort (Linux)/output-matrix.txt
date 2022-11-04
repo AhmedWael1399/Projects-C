@@ -1,0 +1,18 @@
+The Output Matrix with each element computation is 
+3966 3450 3961 
+4201 3731 4115 
+4170 3731 3972 
+4454 3812 4321 
+4350 3970 4365 
+4589 3776 4335 
+Element Computation took 0.000984 seconds to execute 
+
+
+The Output Matrix with each row computation is 
+3966 3450 3961 
+4201 3731 4115 
+4170 3731 3972 
+4454 3812 4321 
+4350 3970 4365 
+4589 3776 4335 
+Row Computation took 0.001563 seconds to execute 
